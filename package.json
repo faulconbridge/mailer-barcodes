@@ -1,0 +1,22 @@
+{
+  "name": "mailer-barcodes",
+  "version": "0.0.0",
+  "description": " Electron application for barcoding marketing mailers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faulconbridge/mailer-barcodes.git"
+  },
+  "author": "Christopher Wetherill",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/faulconbridge/mailer-barcodes/issues"
+  },
+  "homepage": "https://github.com/faulconbridge/mailer-barcodes#readme",
+  "devDependencies": {
+    "electron": "^1.8.2"
+  }
+}

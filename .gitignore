@@ -1,0 +1,24 @@
+# Ignore everything
+*
+
+# But descend into directories
+!*/
+
+# Except for naughty ones
+logs
+pids
+coverage
+build/Release
+node_modules
+jspm_packages
+typings
+.npm
+
+# And permit certain filetypes
+!*.js
+!*.html
+!*.css	
+!*.json
+
+# And dotfiles
+!.gitignore
