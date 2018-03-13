@@ -19,10 +19,11 @@ class Accept extends React.Component {
     super()
     this.state = {
       accepted: [],
-      rejected: []
+      rejected: [],
+      contents: []
     }
   }
-
+  
   render() {
     return (
       <section>
@@ -30,6 +31,28 @@ class Accept extends React.Component {
           <Dropzone
             accept="text/csv"
             onDrop={(accepted, rejected) => {
+              var doc = [];
+              this.setState({contents: []});
+              accepted.forEach(file => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                  const fileAsBinaryString = reader.result;
+
+                  var upload = {
+                    name: file.name,
+                    payload: fileAsBinaryString
+                  };
+
+                  this.setState({contents: upload});
+                };
+                reader.onabort = () => console.log('file reading was aborted');
+                reader.onerror = () => console.log('file reading has failed');
+        
+                reader.readAsBinaryString(file);
+              });
+
+              console.log(doc);
               this.setState({ accepted, rejected }); }
             }
             style={{
@@ -52,6 +75,11 @@ class Accept extends React.Component {
             {
               this.state.accepted.map(f => 
                 <li key={f.name}>{f.name} - {f.size} bytes</li>)
+            }
+          </ul>
+          <ul>
+            {
+              console.log(this.state)
             }
           </ul>
           <h2>Rejected files</h2>
