@@ -2,8 +2,8 @@
 import React from 'react';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import Dropzone from 'react-dropzone';
 import ButtonAppBar from '../components/titlebar';
+import Barcoder from '../components/barcode';
 
 const styles = theme => ({
   content: {
@@ -13,87 +13,6 @@ const styles = theme => ({
   },
   toolbar: theme.mixins.toolbar,
 });
-
-class Accept extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      accepted: [],
-      rejected: [],
-      contents: []
-    }
-  }
-  
-  render() {
-    return (
-      <section>
-        <div className="dropzone">
-          <Dropzone
-            accept="text/csv"
-            onDrop={(accepted, rejected) => {
-              var doc = [];
-              this.setState({contents: []});
-              accepted.forEach(file => {
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                  const fileAsBinaryString = reader.result;
-
-                  var upload = {
-                    name: file.name,
-                    payload: fileAsBinaryString
-                  };
-
-                  this.setState({contents: upload});
-                };
-                reader.onabort = () => console.log('file reading was aborted');
-                reader.onerror = () => console.log('file reading has failed');
-        
-                reader.readAsBinaryString(file);
-              });
-
-              console.log(doc);
-              this.setState({ accepted, rejected }); }
-            }
-            style={{
-              margin: '20px auto',
-              width: '300px',
-              height: '200px',
-              padding: '15px',
-              borderWidth: '2px',
-              borderColor: 'rgb(102, 102, 102)',
-              borderStyle: 'dashed',
-              borderRadius: '5px'}}>
-            <a className="active">
-              Drag and drop your files here to get started, or click to select
-              files to upload.</a>
-          </Dropzone>
-        </div>
-        <aside>
-          <h2>Accepted files</h2>
-          <ul>
-            {
-              this.state.accepted.map(f => 
-                <li key={f.name}>{f.name} - {f.size} bytes</li>)
-            }
-          </ul>
-          <ul>
-            {
-              console.log(this.state)
-            }
-          </ul>
-          <h2>Rejected files</h2>
-          <ul>
-            {
-              this.state.rejected.map(f => 
-                <li key={f.name}>{f.name} - {f.size} bytes</li>)
-            }
-          </ul>
-        </aside>
-      </section>
-    );
-  }
-}
 
 function Home(props) {
   const { classes } = props;
@@ -105,7 +24,7 @@ function Home(props) {
         <div className={classes.toolbar} />
 
         <div className={classes.uploader}>
-          <Accept />
+          <Barcoder />
         </div>
       </main>
     </div>
