@@ -66,7 +66,6 @@ class Accept extends React.Component {
 
 class DownloadButton extends React.Component {
   CSVToArray(payload) {
-    console.log(payload)
     var strDelimiter = ",";
     var objPattern = new RegExp(
       (
@@ -104,8 +103,15 @@ class DownloadButton extends React.Component {
     for(var i = 0; i < arrData.length; i++) {
         output[i] = '$DP$' + arrData[i][0] + '$' + arrData[i][1]
     }
-    console.log(output);
-    return(arrData);
+    return(output);
+  }
+
+  ArrayToCode39(input) {
+    console.log(input);
+    JsBarcode("#barcode", input[0], {
+      format: "CODE39",
+      mod43: true
+    });
   }
 
   render() {
@@ -117,7 +123,14 @@ class DownloadButton extends React.Component {
         <Button
           variant="raised"
           color="secondary"
-          disabled={disabled}>
+          disabled={disabled}
+          onClick={this.ArrayToCode39.bind(this, contents)}
+          style={{
+            margin: '20px auto',
+            position: 'relative',
+            display: 'block'
+          }}
+        >
           Download Barcodes
         </Button>
       </div>
@@ -163,10 +176,8 @@ class Barcoder extends React.Component {
         <DownloadButton
           contents={this.state.contents}
           disabled={this.state.disabled}
-          style={{
-            margin: '0px auto'
-          }}
         />
+        <img id="barcode" />
       </div>
     );
   }
