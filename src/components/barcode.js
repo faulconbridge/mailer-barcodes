@@ -112,6 +112,20 @@ class DownloadButton extends React.Component {
       format: "CODE39",
       mod43: true
     });
+
+    var canvas = document.getElementById("barcode");
+    // var ctx = canvas.getContext("2d");
+    // ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+
+    console.log(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+
+    var link = document.createElement("a");
+    link.download = 'sample.png';
+    link.href = dataURL;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   render() {
@@ -177,7 +191,10 @@ class Barcoder extends React.Component {
           contents={this.state.contents}
           disabled={this.state.disabled}
         />
-        <img id="barcode" />
+        <canvas
+          id="barcode"
+          style={{display: 'hidden'}}>
+        </canvas>
       </div>
     );
   }
