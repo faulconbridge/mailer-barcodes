@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Dropzone from 'react-dropzone';
 import Button from 'material-ui/Button';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 
 class Accept extends React.Component {
   constructor(props) {
@@ -66,14 +68,14 @@ class Accept extends React.Component {
 
 class DownloadButton extends React.Component {
   CSVToArray(payload) {
-    var strDelimiter = ",";
+    var strDelimiter = ',';
     var objPattern = new RegExp(
       (
         "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
         "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
         "([^\"\\" + strDelimiter + "\\r\\n]*))"
       ),
-      "gi"
+      'gi'
     );
 
     var arrData = [[]];
@@ -100,32 +102,36 @@ class DownloadButton extends React.Component {
     }
 
     var output = []
-    for(var i = 0; i < arrData.length; i++) {
-        output[i] = '$DP$' + arrData[i][0] + '$' + arrData[i][1]
+    for(var ii = 0; ii < arrData.length; ii++) {
+        if(arrData[ii].length == 2) {
+          output[ii] = '$DP$' + arrData[ii][0] + '$' + arrData[ii][1]
+        }
     }
     return(output);
   }
 
   ArrayToCode39(input) {
-    console.log(input);
-    JsBarcode("#barcode", input[0], {
-      format: "CODE39",
-      mod43: true
+    var zip = new JSZip();
+
+    for(var ii = 0; ii < input.length; ii++) {
+      JsBarcode('#barcode', input[ii], {
+        format: 'CODE39',
+        mod43: true
+      });
+
+      var canvas = document.getElementById('barcode');
+      var dataURL = canvas.toDataURL('image/png');
+      dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
+      zip.file(input[ii] + '.png', dataURL, {base64: true});
+    }
+
+    var canvas = document.getElementById('barcode');
+    canvas.parentNode.removeChild(canvas);
+
+    zip.generateAsync({type: 'blob'})
+    .then(function (blob) {
+        FileSaver.saveAs(blob, 'barcodes.zip');
     });
-
-    var canvas = document.getElementById("barcode");
-    // var ctx = canvas.getContext("2d");
-    // ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-
-    console.log(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
-
-    var link = document.createElement("a");
-    link.download = 'sample.png';
-    link.href = dataURL;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   render() {
